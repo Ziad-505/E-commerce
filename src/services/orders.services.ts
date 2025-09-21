@@ -2,10 +2,10 @@
 import { getUserToken } from "@/lib/server-utilts";
 
 export async function handlePayment(
-  formState: any,
+  formState: Record<string, unknown>,
   formData: FormData
 ) {
-  console.log("=== Starting Payment Process ===");
+  
   
   // Extract form data
   const cartId = formData.get("cartId") as string;

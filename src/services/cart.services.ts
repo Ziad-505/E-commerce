@@ -3,7 +3,7 @@
 import { getUserToken } from "@/lib/server-utilts";
 
 type CartResponse = {
-  data: any;
+  data: Record<string, unknown> | boolean;
   success: boolean;
   message: string;
 };
