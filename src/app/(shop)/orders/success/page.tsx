@@ -1,11 +1,12 @@
 "use client";
 
+import { Suspense } from 'react';
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Package, Clock, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("order_id") || "N/A";
   const paymentMethod = searchParams.get("payment_method") || "unknown";
@@ -106,5 +107,31 @@ export default function OrderSuccessPage() {
         </div>
       </div>
     </section>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <section className="py-20 bg-gray-50 min-h-screen">
+      <div className="container mx-auto">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+            <div className="animate-pulse">
+              <div className="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-6"></div>
+              <div className="h-8 bg-gray-200 rounded mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded mb-8"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }
