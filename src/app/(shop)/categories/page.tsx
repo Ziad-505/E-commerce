@@ -118,7 +118,7 @@ export default async function CategoriesPage() {
               No categories found
             </h3>
             <p className="text-gray-600 mb-6">
-              We couldn't find any categories matching your criteria.
+              We couldn&apos;t find any categories matching your criteria.
             </p>
           </div>
         )}

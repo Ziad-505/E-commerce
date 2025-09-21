@@ -118,7 +118,7 @@ export default async function BrandsPage() {
               No brands found
             </h3>
             <p className="text-gray-600 mb-6">
-              We couldn't find any brands matching your criteria.
+              We couldn&apos;t find any brands matching your criteria.
             </p>
           </div>
         )}

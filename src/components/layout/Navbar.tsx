@@ -49,11 +49,11 @@ const Navbar = () => {
     <section className="py-4">
       <div className="container mx-auto">
         <nav className="flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2">
+          <Link href={"/"} className="flex items-center gap-2">
             <span className="text-lg font-semibold tracking-tighter">
               Exclusive
             </span>
-          </a>
+          </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               {links.map((link, idx) => (

@@ -192,7 +192,7 @@ export default function OrdersPage() {
                 No orders yet
               </h2>
               <p className="text-gray-600 mb-8 max-w-md">
-                You haven't placed any orders yet. Start shopping to see your orders here.
+                You haven&apos;t placed any orders yet. Start shopping to see your orders here.
               </p>
               <Button className="bg-red-600 hover:bg-red-700" asChild>
                 <Link href="/products">

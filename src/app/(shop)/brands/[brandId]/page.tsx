@@ -83,7 +83,7 @@ export default async function BrandDetailsPage({
                 No products found
               </h3>
               <p className="text-gray-600">
-                This brand doesn't have any products available at the moment.
+                This brand doesn&apos;t have any products available at the moment.
               </p>
             </div>
           )}

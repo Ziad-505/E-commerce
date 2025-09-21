@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
             </h1>
             
             <p className="text-gray-600 mb-8">
-              We've sent a password reset code to your email address. 
+              We&apos;ve sent a password reset code to your email address. 
               Please check your inbox and follow the instructions.
             </p>
 
@@ -126,7 +126,7 @@ export default function ForgotPasswordPage() {
             </h1>
             
             <p className="text-gray-600">
-              Enter your email address and we'll send you a reset code.
+              Enter your email address and we&apos;ll send you a reset code.
             </p>
           </div>
 

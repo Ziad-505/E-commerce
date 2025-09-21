@@ -133,7 +133,7 @@ export default async function ProductPage() {
               No products found
             </h3>
             <p className="text-gray-600 mb-6">
-              We couldn't find any products matching your criteria.
+              We couldn&apos;t find any products matching your criteria.
             </p>
             <Button variant="outline">
               Clear filters

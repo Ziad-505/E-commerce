@@ -26,7 +26,7 @@ export default function OrderSuccessPage() {
             </h1>
             
             <p className="text-gray-600 mb-8">
-              Thank you for your order. We've received your payment and will process your order shortly.
+              Thank you for your order. We&apos;ve received your payment and will process your order shortly.
             </p>
 
             {/* Order Details */}
@@ -70,15 +70,15 @@ export default function OrderSuccessPage() {
 
             {/* What's Next */}
             <div className="text-left mb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">What's Next?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">What&apos;s Next?</h3>
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                  You'll receive an order confirmation email shortly
+                  You&apos;ll receive an order confirmation email shortly
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                  We'll notify you when your order ships
+                  We&apos;ll notify you when your order ships
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />

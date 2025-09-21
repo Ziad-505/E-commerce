@@ -83,7 +83,7 @@ export default async function CategoryDetailsPage({
                 No products found
               </h3>
               <p className="text-gray-600">
-                This category doesn't have any products available at the moment.
+                This category doesn&apos;t have any products available at the moment.
               </p>
             </div>
           )}
