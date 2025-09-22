@@ -35,28 +35,11 @@ const initialState = {
 
 export default function CheckOutPage() {
   const { cartDetails, setCartDetails } = useCart();
-  const [action, formAction, isPending] = useActionState(
-    handlePayment,
-    initialState
-  );
+  const [isProcessingCash, setIsProcessingCash] = useState(false);
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [isProcessingCard, setIsProcessingCard] = useState(false);
   const { data: session } = useSession();
-
-  React.useEffect(() => {
-    if (action.message) {
-      if (action.success) {
-        toast.success(action.message, { position: "top-center" });
-        setCartDetails(null);
-        if (action.callbackUrl) {
-          setTimeout(() => router.push(action.callbackUrl), 1500);
-        }
-      } else {
-        toast.error(action.message, { position: "top-center" });
-      }
-    }
-  }, [action, router, setCartDetails]);
 
   const total = cartDetails?.data?.totalCartPrice || 0;
 
@@ -134,7 +117,34 @@ export default function CheckOutPage() {
     if (selectedPaymentMethod === "card") {
       await handleCardPayment(formData);
     } else {
-      formAction(formData);
+      // Handle cash payment
+      setIsProcessingCash(true);
+
+      const token = session?.routeMisrToken;
+
+      if (!token) {
+        toast.error("Please log in to continue");
+        setIsProcessingCash(false);
+        return;
+      }
+
+      try {
+        const result = await handlePayment({}, formData, token);
+
+        if (result.success) {
+          toast.success(result.message, { position: "top-center" });
+          setCartDetails(null);
+          if (result.callbackUrl) {
+            setTimeout(() => router.push(result.callbackUrl), 1500);
+          }
+        } else {
+          toast.error(result.message, { position: "top-center" });
+        }
+      } catch (error) {
+        toast.error("Failed to process order");
+      } finally {
+        setIsProcessingCash(false);
+      }
     }
   };
 
@@ -210,11 +220,7 @@ export default function CheckOutPage() {
                   className="h-12 border-gray-300 focus:border-red-500 focus:ring-red-500"
                   required
                 />
-                {action.error?.details && (
-                  <p className="text-red-600 text-sm">
-                    {action.error.details[0]}
-                  </p>
-                )}
+                
               </div>
 
               <div className="space-y-2">
@@ -228,9 +234,7 @@ export default function CheckOutPage() {
                   className="h-12 border-gray-300 focus:border-red-500 focus:ring-red-500"
                   required
                 />
-                {action.error?.city && (
-                  <p className="text-red-600 text-sm">{action.error.city[0]}</p>
-                )}
+                
               </div>
 
               <div className="space-y-2">
@@ -245,11 +249,7 @@ export default function CheckOutPage() {
                   className="h-12 border-gray-300 focus:border-red-500 focus:ring-red-500"
                   required
                 />
-                {action.error?.phone && (
-                  <p className="text-red-600 text-sm">
-                    {action.error.phone[0]}
-                  </p>
-                )}
+                
                 <p className="text-xs text-gray-500">Format: 01012345678</p>
               </div>
 
@@ -332,10 +332,10 @@ export default function CheckOutPage() {
 
               <Button
                 type="submit"
-                disabled={isPending || isProcessingCard}
+                disabled={isProcessingCard || isProcessingCash}
                 className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
               >
-                {isPending || isProcessingCard ? (
+                {isProcessingCard || isProcessingCash ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Processing...

@@ -1,13 +1,10 @@
 "use server";
-import { getUserToken } from "@/lib/server-utilts";
 
 export async function handlePayment(
   formState: Record<string, unknown>,
-  formData: FormData
+  formData: FormData,
+  token: string
 ) {
-  
-  
-  // Extract form data
   const cartId = formData.get("cartId") as string;
   const details = formData.get("details") as string;
   const city = formData.get("city") as string;
@@ -42,9 +39,6 @@ export async function handlePayment(
   }
 
   try {
-    const token = await getUserToken();
-    console.log("Token retrieved:", token ? "Yes" : "No");
-    
     if (!token) {
       return {
         success: false,
@@ -63,11 +57,6 @@ export async function handlePayment(
     };
 
     console.log("Request URL:", `https://ecommerce.routemisr.com/api/v1/orders/${cartId}`);
-    console.log("Request body:", JSON.stringify(requestBody, null, 2));
-    console.log("Request headers:", {
-      "Content-Type": "application/json",
-      "token": token ? "***PRESENT***" : "MISSING"
-    });
 
     const res = await fetch(
       `https://ecommerce.routemisr.com/api/v1/orders/${cartId}`,
@@ -81,11 +70,7 @@ export async function handlePayment(
       }
     );
 
-    console.log("Response status:", res.status);
-    console.log("Response ok:", res.ok);
-
     const data = await res.json();
-    console.log("Response data:", data);
 
     if (!res.ok) {
       console.log("API Error:", data);
@@ -97,7 +82,7 @@ export async function handlePayment(
       };
     }
 
-    console.log("=== Order Created Successfully ===");
+    console.log("Order Created Successfully");
     return {
       success: true,
       error: {},
@@ -106,7 +91,7 @@ export async function handlePayment(
     };
 
   } catch (error) {
-    console.error("=== Unexpected Error ===", error);
+    console.error("Unexpected Error", error);
     return {
       success: false,
       error: {},
@@ -116,10 +101,8 @@ export async function handlePayment(
   }
 }
 
-export async function getUserOrders() {
+export async function getUserOrders(token: string) {
   try {
-    const token = await getUserToken();
-    
     if (!token) {
       return {
         success: false,

@@ -1,17 +1,13 @@
 "use server";
 
-import { getUserToken } from "@/lib/server-utilts";
-
 type CartResponse = {
   data: Record<string, unknown> | boolean;
   success: boolean;
   message: string;
 };
 
-export async function getUserCart(): Promise<CartResponse> {
+export async function getUserCart(token: string): Promise<CartResponse> {
   try {
-    const token = await getUserToken();
-    
     if (!token) {
       return {
         data: false,
@@ -49,10 +45,8 @@ export async function getUserCart(): Promise<CartResponse> {
   }
 }
 
-export async function removeUserCart(): Promise<CartResponse> {
+export async function removeUserCart(token: string): Promise<CartResponse> {
   try {
-    const token = await getUserToken();
-    
     if (!token) {
       return {
         data: false,
@@ -91,7 +85,7 @@ export async function removeUserCart(): Promise<CartResponse> {
   }
 }
 
-export async function addToCart(productId: string): Promise<CartResponse> {
+export async function addToCart(productId: string, token: string): Promise<CartResponse> {
   try {
     if (!productId) {
       return {
@@ -101,8 +95,6 @@ export async function addToCart(productId: string): Promise<CartResponse> {
       };
     }
 
-    const token = await getUserToken();
-    
     if (!token) {
       return {
         data: false,
@@ -143,7 +135,7 @@ export async function addToCart(productId: string): Promise<CartResponse> {
   }
 }
 
-export async function removeFromCart(productId: string): Promise<CartResponse> {
+export async function removeFromCart(productId: string, token: string): Promise<CartResponse> {
   try {
     if (!productId) {
       return {
@@ -153,8 +145,6 @@ export async function removeFromCart(productId: string): Promise<CartResponse> {
       };
     }
 
-    const token = await getUserToken();
-    
     if (!token) {
       return {
         data: false,
@@ -176,25 +166,25 @@ export async function removeFromCart(productId: string): Promise<CartResponse> {
       return {
         data: false,
         success: false,
-        message: data.message || "Error in Adding Item to Cart",
+        message: data.message || "Error in Removing Item from Cart",
       };
     }
     return {
       data: data,
       success: true,
-      message: data.message || "Item Added to Cart Successfully",
+      message: data.message || "Item Removed from Cart Successfully",
     };
   } catch (error) {
-    console.error("Error in addToCart:", error);
+    console.error("Error in removeFromCart:", error);
     return {
       data: false,
       success: false,
-      message: "Unexpected Error in Adding Item To Cart",
+      message: "Unexpected Error in Removing Item From Cart",
     };
   }
 }
 
-export async function updateQtyProductCart(productId: string, count: number): Promise<CartResponse> {
+export async function updateQtyProductCart(productId: string, count: number, token: string): Promise<CartResponse> {
   try {
     if (!productId) {
       return {
@@ -204,8 +194,6 @@ export async function updateQtyProductCart(productId: string, count: number): Pr
       };
     }
 
-    const token = await getUserToken();
-    
     if (!token) {
       return {
         data: false,
@@ -213,7 +201,6 @@ export async function updateQtyProductCart(productId: string, count: number): Pr
         message: "Authentication required. Please login.",
       };
     }
-
 
     const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart/${productId}`, {
       method: "PUT",
@@ -238,7 +225,7 @@ export async function updateQtyProductCart(productId: string, count: number): Pr
       message: data.message || "Updated Quantity in Cart Successfully",
     };
   } catch (error) {
-    console.error("Error in addToCart:", error);
+    console.error("Error in updateQtyProductCart:", error);
     return {
       data: false,
       success: false,
@@ -246,4 +233,3 @@ export async function updateQtyProductCart(productId: string, count: number): Pr
     };
   }
 }
-

@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
+import { useSession } from "next-auth/react";
 import {
   removeFromCart,
   removeUserCart,
@@ -34,9 +35,17 @@ import {
 
 export default function CartPage() {
   const { cartDetails, setCartDetails } = useCart();
+  const { data: session } = useSession();
 
   async function removeCartItem() {
-    const res = await removeUserCart();
+    const token = session?.routeMisrToken;
+    
+    if (!token) {
+      toast.error("Please log in to continue");
+      return;
+    }
+
+    const res = await removeUserCart(token);
     if (res?.message === "success") {
       toast.success("Cart cleared successfully");
       setCartDetails(null);
@@ -46,7 +55,14 @@ export default function CartPage() {
   }
 
   async function removeProductFromCart(productId: string) {
-    const res = await removeFromCart(productId);
+    const token = session?.routeMisrToken;
+    
+    if (!token) {
+      toast.error("Please log in to continue");
+      return;
+    }
+
+    const res = await removeFromCart(productId, token);
     if (res.success) {
       toast.success(res.message, { position: "top-center" });
       setCartDetails(res.data);
@@ -58,7 +74,14 @@ export default function CartPage() {
   async function updateQuantityProductCart(productId: string, count: number) {
     if (count < 1) return;
 
-    const res = await updateQtyProductCart(productId, count);
+    const token = session?.routeMisrToken;
+    
+    if (!token) {
+      toast.error("Please log in to continue");
+      return;
+    }
+
+    const res = await updateQtyProductCart(productId, count, token);
     if (res.success) {
       toast.success(res.message, { position: "top-center" });
       setCartDetails(res.data);
