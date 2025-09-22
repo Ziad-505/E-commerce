@@ -10,7 +10,7 @@ export const authOptions: NextAuthOptions = {
         password: { name: "password", type: "password", required: true },
       },
       authorize: async (credentials) => {
-        console.log(credentials);
+        console.log("=== LOGIN ATTEMPT ===", credentials?.email);
 
         try {
           const res = await fetch(
@@ -28,17 +28,22 @@ export const authOptions: NextAuthOptions = {
           );
 
           const data = await res.json();
+          console.log("Login API response:", data.message);
+          
           if (!res.ok) {
-            throw new Error(data.message || "Failed  to fetch");
+            throw new Error(data.message || "Failed to fetch");
           }
           const decoded = JSON.parse(atob(data.token.split(".")[1]));
+          
+          console.log("User authorized successfully:", decoded.id);
+          
           return {
             id: decoded.id,
             user: data.user,
             token: data.token, 
           };
         } catch (error) {
-          console.log(error);
+          console.log("Authorization error:", error);
           throw new Error((error as Error).message);
         }
       },
@@ -48,6 +53,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        console.log("Storing user in JWT:", !!user.token);
         token.user = user.user;
         token.routeMisrToken = user.token;
       }
@@ -56,12 +62,29 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       if (token) {
+        console.log("Creating session with token:", !!token.routeMisrToken);
         session.user = token.user;
         session.routeMisrToken = token.routeMisrToken; 
       }
       return session;
     }
   },
+  
+  // Add these production settings
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.session-token' 
+        : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
+  
   pages: {
     signIn: "/login",
   },
